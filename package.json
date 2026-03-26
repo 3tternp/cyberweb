@@ -1,0 +1,23 @@
+{
+  "name": "cyberweb-criminalip-clone",
+  "version": "1.0.0",
+  "description": "Simplified Criminal IP-like cyber threat intelligence demo built with Node.js and React.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "security",
+    "cti",
+    "ip-intelligence",
+    "react",
+    "node"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7"
+  }
+}

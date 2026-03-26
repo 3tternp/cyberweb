@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cyberweb CTI Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #050816;
+        color: #e5e7eb;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .app-root {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      header {
+        padding: 16px 24px;
+        border-bottom: 1px solid #111827;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(90deg, #020617, #0f172a);
+      }
+      header h1 {
+        font-size: 1.1rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin: 0;
+        color: #a855f7;
+      }
+      header span {
+        font-size: 0.8rem;
+        color: #9ca3af;
+      }
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        gap: 16px;
+      }
+      .mode-tabs {
+        display: inline-flex;
+        background: #020617;
+        border-radius: 999px;
+        padding: 4px;
+        border: 1px solid #111827;
+        margin-bottom: 8px;
+      }
+      .mode-tab {
+        border-radius: 999px;
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        color: #9ca3af;
+      }
+      .mode-tab.active {
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+        color: #f9fafb;
+      }
+      .layout-row {
+        flex: 1;
+        display: flex;
+        gap: 24px;
+      }
+      .search-panel,
+      .result-panel {
+        background: radial-gradient(circle at top, #111827, #020617);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #111827;
+      }
+      .search-panel {
+        flex: 0 0 360px;
+      }
+      .result-panel {
+        flex: 1;
+        min-height: 260px;
+        display: flex;
+        flex-direction: column;
+      }
+      label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #9ca3af;
+      }
+      input {
+        width: 100%;
+        margin-top: 8px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #374151;
+        background: #020617;
+        color: #f9fafb;
+      }
+      input:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 1px #6366f1;
+      }
+      button {
+        margin-top: 12px;
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+        color: #f9fafb;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+      .hint {
+        margin-top: 10px;
+        font-size: 0.75rem;
+        color: #6b7280;
+      }
+      .pill-row {
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .pill {
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        border: 1px solid #1f2937;
+        color: #9ca3af;
+      }
+      .pill.primary {
+        border-color: #22c55e33;
+        background: #16a34a26;
+        color: #bbf7d0;
+      }
+      .pill.warning {
+        border-color: #f9731633;
+        background: #f973161a;
+        color: #fed7aa;
+      }
+      .pill.danger {
+        border-color: #ef444433;
+        background: #ef44441a;
+        color: #fecaca;
+      }
+      .result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .result-title {
+        font-size: 0.9rem;
+        color: #e5e7eb;
+      }
+      .score-badges {
+        display: flex;
+        gap: 8px;
+      }
+      .badge {
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        border: 1px solid #1f2937;
+        color: #9ca3af;
+      }
+      .badge-label {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.65rem;
+        margin-right: 4px;
+        color: #6b7280;
+      }
+      .badge-value {
+        font-weight: 600;
+      }
+      .badge.good {
+        border-color: #22c55e33;
+        background: #16a34a1a;
+        color: #bbf7d0;
+      }
+      .badge.moderate {
+        border-color: #eab30833;
+        background: #eab3081a;
+        color: #fef9c3;
+      }
+      .badge.bad {
+        border-color: #ef444433;
+        background: #ef44441a;
+        color: #fecaca;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+        margin-top: 8px;
+      }
+      .stat-card {
+        border-radius: 12px;
+        padding: 10px 12px;
+        border: 1px solid #111827;
+        background: #020617;
+      }
+      .stat-label {
+        font-size: 0.7rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .stat-value {
+        margin-top: 4px;
+        font-size: 0.86rem;
+        color: #e5e7eb;
+      }
+      .code-block {
+        margin-top: 14px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #020617;
+        border: 1px solid #111827;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+        font-size: 0.75rem;
+        color: #9ca3af;
+        max-height: 220px;
+        overflow: auto;
+      }
+      .detail-sections {
+        margin-top: 14px;
+        display: grid;
+        gap: 12px;
+      }
+      .detail-card {
+        border-radius: 12px;
+        padding: 12px;
+        border: 1px solid #111827;
+        background: #020617;
+      }
+      .detail-title {
+        font-size: 0.72rem;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
+      }
+      .detail-list {
+        margin: 0;
+        padding-left: 18px;
+        color: #e5e7eb;
+        font-size: 0.84rem;
+      }
+      .detail-list li + li {
+        margin-top: 4px;
+      }
+      .detail-pairs {
+        display: grid;
+        gap: 8px;
+      }
+      .detail-pair {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 10px;
+        font-size: 0.84rem;
+      }
+      .detail-key {
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 0.7rem;
+      }
+      .detail-value {
+        color: #e5e7eb;
+        word-break: break-word;
+      }
+      .dashboard-shell {
+        margin-top: 14px;
+        display: grid;
+        gap: 14px;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 14px;
+      }
+      .hero-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 18px;
+        padding: 18px;
+        border: 1px solid #172036;
+        background:
+          radial-gradient(circle at top right, rgba(34, 197, 94, 0.18), transparent 32%),
+          radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.18), transparent 28%),
+          linear-gradient(160deg, #07111f, #030813 65%);
+      }
+      .hero-card.alert {
+        background:
+          radial-gradient(circle at top right, rgba(239, 68, 68, 0.2), transparent 32%),
+          radial-gradient(circle at bottom left, rgba(249, 115, 22, 0.16), transparent 28%),
+          linear-gradient(160deg, #12080d, #04070f 65%);
+      }
+      .hero-kicker {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #93c5fd;
+      }
+      .hero-headline {
+        margin-top: 8px;
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: #f8fafc;
+      }
+      .hero-copy {
+        margin-top: 8px;
+        color: #9ca3af;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+      .hero-strip {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .hero-metric {
+        border-radius: 12px;
+        padding: 10px 12px;
+        background: rgba(2, 6, 23, 0.72);
+        border: 1px solid rgba(37, 99, 235, 0.14);
+      }
+      .hero-metric-label {
+        font-size: 0.68rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .hero-metric-value {
+        margin-top: 6px;
+        font-size: 1rem;
+        color: #f8fafc;
+        font-weight: 600;
+      }
+      .chart-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .chart-card {
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid #172036;
+        background: linear-gradient(180deg, #08111f, #040914);
+      }
+      .chart-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+      .chart-title {
+        font-size: 0.74rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #9ca3af;
+      }
+      .chart-number {
+        font-size: 0.82rem;
+        color: #cbd5e1;
+      }
+      .ring-wrap {
+        margin-top: 16px;
+        display: flex;
+        justify-content: center;
+      }
+      .ring-chart {
+        --angle: 0deg;
+        --ring-color: #22c55e;
+        width: 122px;
+        height: 122px;
+        border-radius: 999px;
+        background:
+          radial-gradient(circle at center, #040914 0 42px, transparent 43px),
+          conic-gradient(var(--ring-color) 0deg var(--angle), rgba(148, 163, 184, 0.12) var(--angle) 360deg);
+        display: grid;
+        place-items: center;
+        box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08);
+      }
+      .ring-inner {
+        text-align: center;
+      }
+      .ring-score {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #f8fafc;
+      }
+      .ring-label {
+        font-size: 0.68rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .legend-list {
+        margin-top: 14px;
+        display: grid;
+        gap: 8px;
+      }
+      .legend-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+      }
+      .legend-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #cbd5e1;
+      }
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+      }
+      .legend-right {
+        color: #94a3b8;
+      }
+      .source-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .source-card {
+        border-radius: 14px;
+        padding: 14px;
+        border: 1px solid #172036;
+        background: linear-gradient(180deg, #07111e, #030813);
+      }
+      .source-name {
+        font-size: 0.8rem;
+        color: #f8fafc;
+        font-weight: 600;
+      }
+      .source-type {
+        margin-top: 4px;
+        font-size: 0.72rem;
+        color: #7dd3fc;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .source-copy {
+        margin-top: 8px;
+        color: #94a3b8;
+        font-size: 0.8rem;
+        line-height: 1.45;
+      }
+      .vuln-dashboard {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 14px;
+      }
+      .vuln-chart-card,
+      .vuln-summary-card {
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid #172036;
+        background: linear-gradient(180deg, #07111e, #030813);
+      }
+      .vuln-donut-wrap {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+      }
+      .vuln-donut {
+        width: 220px;
+        height: 220px;
+      }
+      .vuln-center-number {
+        font-size: 1.4rem;
+        font-weight: 700;
+        fill: #f8fafc;
+      }
+      .vuln-center-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        fill: #94a3b8;
+      }
+      .vuln-legend {
+        margin-top: 14px;
+        display: grid;
+        gap: 8px;
+      }
+      .vuln-legend-button {
+        width: 100%;
+        margin-top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid #1f2937;
+        background: #08101d;
+        color: #e5e7eb;
+        cursor: pointer;
+      }
+      .vuln-legend-button.active {
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.25) inset;
+      }
+      .vuln-legend-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .vuln-swatch {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+      }
+      .vuln-legend-count {
+        color: #94a3b8;
+        font-size: 0.82rem;
+      }
+      .vuln-summary-grid {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .vuln-mini-stat {
+        border-radius: 12px;
+        padding: 12px;
+        background: #08101d;
+        border: 1px solid #152033;
+      }
+      .vuln-mini-label {
+        font-size: 0.68rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .vuln-mini-value {
+        margin-top: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #f8fafc;
+      }
+      .vuln-results-layout {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: 1.25fr 0.95fr;
+        gap: 14px;
+      }
+      .vuln-detail-panel {
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid #172036;
+        background: linear-gradient(180deg, #07111e, #030813);
+      }
+      .vuln-id {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #f8fafc;
+      }
+      .vuln-summary-text {
+        margin-top: 10px;
+        color: #cbd5e1;
+        font-size: 0.88rem;
+        line-height: 1.55;
+      }
+      .reference-list {
+        margin: 0;
+        padding-left: 18px;
+      }
+      .reference-list li + li {
+        margin-top: 8px;
+      }
+      .reference-list a {
+        color: #7dd3fc;
+        text-decoration: none;
+      }
+      .clickable-row {
+        cursor: pointer;
+      }
+      .clickable-row.active td {
+        background: rgba(56, 189, 248, 0.1);
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+        font-size: 0.8rem;
+      }
+      .table th,
+      .table td {
+        padding: 6px 8px;
+        border-bottom: 1px solid #111827;
+      }
+      .table th {
+        text-align: left;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.7rem;
+      }
+      .table tr:hover td {
+        background: #020617;
+      }
+      .badge-severity {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 6px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+      }
+      .badge-severity.high {
+        background: #ef44441a;
+        color: #fecaca;
+      }
+      .badge-severity.medium {
+        background: #f973161a;
+        color: #fed7aa;
+      }
+      .badge-severity.low {
+        background: #22c55e1a;
+        color: #bbf7d0;
+      }
+      .badge-severity.na {
+        background: #374151;
+        color: #e5e7eb;
+      }
+      .muted {
+        font-size: 0.8rem;
+        color: #6b7280;
+      }
+      footer {
+        padding: 10px 16px;
+        border-top: 1px solid #111827;
+        font-size: 0.7rem;
+        color: #4b5563;
+        background: #020617;
+        text-align: center;
+      }
+      @media (max-width: 800px) {
+        main {
+          flex-direction: column;
+          padding: 16px;
+        }
+        .search-panel {
+          flex: 1;
+        }
+        .hero-grid,
+        .source-grid,
+        .chart-grid,
+        .vuln-dashboard {
+          grid-template-columns: 1fr;
+        }
+        .hero-strip {
+          grid-template-columns: 1fr;
+        }
+        .vuln-summary-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="app-root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      const popularVendorProducts = {
+        microsoft: ["windows", "office", "azure", "defender", "sql_server"],
+        apache: ["http_server", "tomcat", "struts"],
+        linux: ["kernel"],
+        oracle: ["mysql", "weblogic", "java"],
+        adobe: ["acrobat_reader", "acrobat", "experience_manager"],
+        cisco: ["ios", "asa", "nx_os"],
+        google: ["chrome", "android"],
+        redhat: ["enterprise_linux", "openshift"],
+        vmware: ["esxi", "vcenter_server"],
+        juniper: ["junos"]
+      };
+
+      const popularVendorKeys = Object.keys(popularVendorProducts);
+
+      function scoreBadgeLevel(level) {
+        if (!level) return "";
+        const normalized = level.toLowerCase();
+        if (normalized.includes("low")) return "good";
+        if (normalized.includes("moderate")) return "moderate";
+        return "bad";
+      }
+
+      function App() {
+        const [mode, setMode] = useState("asset");
+
+        const [query, setQuery] = useState("");
+        const [loading, setLoading] = useState(false);
+        const [error, setError] = useState("");
+        const [result, setResult] = useState(null);
+
+        const [vVendor, setVVendor] = useState("");
+        const [vProduct, setVProduct] = useState("");
+        const [vLoading, setVLoading] = useState(false);
+        const [vError, setVError] = useState("");
+        const [vItems, setVItems] = useState([]);
+        const [vSource, setVSource] = useState("");
+        const [vSeverity, setVSeverity] = useState("all");
+        const [vDateFrom, setVDateFrom] = useState("");
+        const [vDateTo, setVDateTo] = useState("");
+        const [vendorOptions, setVendorOptions] = useState(popularVendorKeys);
+        const [productOptions, setProductOptions] = useState([]);
+        const [selectedCveId, setSelectedCveId] = useState("");
+
+        useEffect(function () {
+          async function loadVendors() {
+            try {
+              const res = await fetch("/api/cve/vendors");
+              if (!res.ok) {
+                return;
+              }
+              const data = await res.json();
+              const list =
+                data && data.vendors && Array.isArray(data.vendors)
+                  ? data.vendors
+                  : [];
+              const merged = popularVendorKeys.concat(
+                list.filter(function (v) {
+                  return popularVendorKeys.indexOf(v) === -1;
+                })
+              );
+              setVendorOptions(merged);
+            } catch (err) {
+            }
+          }
+          loadVendors();
+        }, []);
+
+        useEffect(
+          function () {
+            if (!vVendor) {
+              setProductOptions([]);
+              return;
+            }
+            async function loadProducts() {
+              if (popularVendorProducts[vVendor]) {
+                setProductOptions(popularVendorProducts[vVendor]);
+                return;
+              }
+              try {
+                const params = new URLSearchParams({ vendor: vVendor });
+                const res = await fetch(
+                  "/api/cve/products?" + params.toString()
+                );
+                if (!res.ok) {
+                  setProductOptions([]);
+                  return;
+                }
+                const data = await res.json();
+                const list =
+                  data && data.products && Array.isArray(data.products)
+                    ? data.products
+                    : [];
+                setProductOptions(list);
+              } catch (err) {
+                setProductOptions([]);
+              }
+            }
+            loadProducts();
+          },
+          [vVendor]
+        );
+
+        async function handleSearch(e) {
+          e.preventDefault();
+          if (mode !== "asset") {
+            return;
+          }
+          setError("");
+
+          const trimmed = query.trim();
+          if (!trimmed) {
+            setError("Enter an IP address or domain to search.");
+            return;
+          }
+
+          setLoading(true);
+          try {
+            const params = new URLSearchParams({ query: trimmed });
+            const res = await fetch("/api/search?" + params.toString());
+            if (!res.ok) {
+              const data = await res.json().catch(() => ({}));
+              throw new Error(data.error || "Search failed");
+            }
+            const data = await res.json();
+            setResult(data);
+          } catch (err) {
+            setError(err.message || "Unexpected error");
+            setResult(null);
+          } finally {
+            setLoading(false);
+          }
+        }
+
+        async function handleVulnSearch(e) {
+          e.preventDefault();
+          setVError("");
+          const vendor = vVendor.trim();
+          const product = vProduct.trim();
+          if (!vendor || !product) {
+            setVError("Enter both vendor and product, for example: microsoft / office");
+            return;
+          }
+          setVLoading(true);
+          try {
+            const queryParams = { vendor, product };
+            if (vDateFrom) {
+              queryParams.from = vDateFrom;
+            }
+            if (vDateTo) {
+              queryParams.to = vDateTo;
+            }
+            const params = new URLSearchParams(queryParams);
+            const res = await fetch("/api/cve/search?" + params.toString());
+            if (!res.ok) {
+              const data = await res.json().catch(() => ({}));
+              throw new Error(data.error || "Search failed");
+            }
+            const data = await res.json();
+            const items =
+              data && data.result && Array.isArray(data.result) ? data.result : [];
+            setVItems(items);
+            setVSource(data && data.source ? data.source : "");
+            setSelectedCveId(items.length > 0 && items[0].id ? items[0].id : "");
+          } catch (err) {
+            setVError(err.message || "Unexpected error");
+            setVItems([]);
+            setVSource("");
+            setSelectedCveId("");
+          } finally {
+            setVLoading(false);
+          }
+        }
+
+        function getCvssScore(cve) {
+          if (!cve) return null;
+          const raw =
+            cve.cvss3 || cve.cvss || cve.cvssv2 || cve.cvssv3;
+          if (raw === undefined || raw === null) return null;
+          const n =
+            typeof raw === "number" ? raw : parseFloat(raw);
+          if (!n && n !== 0) return null;
+          if (!isFinite(n)) return null;
+          return n;
+        }
+
+        function renderSeverityBadge(cve) {
+          const score = getCvssScore(cve);
+          if (score === null) {
+            return <span className="badge-severity na">N/A</span>;
+          }
+          let cls = "low";
+          if (score >= 9) cls = "high";
+          else if (score >= 7) cls = "high";
+          else if (score >= 4) cls = "medium";
+          return (
+            <span className={"badge-severity " + cls}>
+              {score.toFixed(1)}
+            </span>
+          );
+        }
+
+        function severityBucket(cve) {
+          const score = getCvssScore(cve);
+          if (score === null) return null;
+          if (score >= 9) return "critical";
+          if (score >= 7) return "high";
+          if (score >= 4) return "medium";
+          return "low";
+        }
+
+        function passesSeverityFilter(cve) {
+          if (vSeverity === "all") return true;
+          const score = getCvssScore(cve);
+          if (score === null) return false;
+          if (vSeverity === "low") return score < 4;
+          if (vSeverity === "medium") return score >= 4 && score < 7;
+          if (vSeverity === "high") return score >= 7 && score < 9;
+          if (vSeverity === "critical") return score >= 9;
+          return true;
+        }
+
+        function parseFilterDate(value) {
+          if (!value) return null;
+          const d = new Date(value);
+          if (isNaN(d.getTime())) return null;
+          return d;
+        }
+
+        function passesDateFilter(cve) {
+          if (!vDateFrom && !vDateTo) return true;
+          const raw =
+            cve.Published || cve.published || cve.LastModified || cve.last_modified;
+          if (!raw) return false;
+          const d = new Date(raw);
+          if (isNaN(d.getTime())) return false;
+          const from = parseFilterDate(vDateFrom);
+          const to = parseFilterDate(vDateTo);
+          if (from && d < from) return false;
+          if (to) {
+            const end = new Date(to.getTime());
+            end.setDate(end.getDate() + 1);
+            if (d >= end) return false;
+          }
+          return true;
+        }
+
+        function filteredVulns() {
+          return vItems
+            .filter(function (cve) {
+              return passesSeverityFilter(cve) && passesDateFilter(cve);
+            })
+            .sort(function (a, b) {
+              const aDate = new Date(
+                a.Published || a.published || a.LastModified || a.last_modified || 0
+              ).getTime();
+              const bDate = new Date(
+                b.Published || b.published || b.LastModified || b.last_modified || 0
+              ).getTime();
+              if (bDate !== aDate) {
+                return bDate - aDate;
+              }
+              const aScore = typeof a.cvss === "number" ? a.cvss : -1;
+              const bScore = typeof b.cvss === "number" ? b.cvss : -1;
+              return bScore - aScore;
+            });
+        }
+
+        function selectedVuln() {
+          const items = filteredVulns();
+          if (!items.length) {
+            return null;
+          }
+
+          const explicit = items.find(function (item) {
+            return item.id === selectedCveId;
+          });
+          return explicit || items[0];
+        }
+
+        function vulnItemsForChart() {
+          return vItems.filter(function (cve) {
+            return passesDateFilter(cve);
+          });
+        }
+
+        function severityChartData() {
+          const counts = {
+            critical: 0,
+            high: 0,
+            medium: 0,
+            low: 0,
+          };
+
+          vulnItemsForChart().forEach(function (cve) {
+            const bucket = severityBucket(cve);
+            if (bucket) {
+              counts[bucket] += 1;
+            }
+          });
+
+          return [
+            { key: "critical", label: "Critical", color: "#ef4444", count: counts.critical },
+            { key: "high", label: "High", color: "#f97316", count: counts.high },
+            { key: "medium", label: "Medium", color: "#eab308", count: counts.medium },
+            { key: "low", label: "Low", color: "#22c55e", count: counts.low },
+          ];
+        }
+
+        function arcPath(cx, cy, rOuter, rInner, startAngle, endAngle) {
+          const startOuterX = cx + rOuter * Math.cos(startAngle);
+          const startOuterY = cy + rOuter * Math.sin(startAngle);
+          const endOuterX = cx + rOuter * Math.cos(endAngle);
+          const endOuterY = cy + rOuter * Math.sin(endAngle);
+          const startInnerX = cx + rInner * Math.cos(endAngle);
+          const startInnerY = cy + rInner * Math.sin(endAngle);
+          const endInnerX = cx + rInner * Math.cos(startAngle);
+          const endInnerY = cy + rInner * Math.sin(startAngle);
+          const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
+
+          return [
+            "M", startOuterX, startOuterY,
+            "A", rOuter, rOuter, 0, largeArc, 1, endOuterX, endOuterY,
+            "L", startInnerX, startInnerY,
+            "A", rInner, rInner, 0, largeArc, 0, endInnerX, endInnerY,
+            "Z"
+          ].join(" ");
+        }
+
+        function renderVulnSeverityChart() {
+          const chartData = severityChartData();
+          const total = chartData.reduce(function (sum, item) {
+            return sum + item.count;
+          }, 0);
+          const filteredCount = filteredVulns().length;
+          const activeSeverity = vSeverity || "all";
+          let currentAngle = -Math.PI / 2;
+
+          return (
+            <div className="vuln-dashboard">
+              <div className="vuln-chart-card">
+                <div className="detail-title">Severity Distribution</div>
+                <div className="vuln-donut-wrap">
+                  <svg viewBox="0 0 220 220" className="vuln-donut" role="img" aria-label="Vulnerability severity chart">
+                    {total === 0 && (
+                      <circle cx="110" cy="110" r="72" fill="none" stroke="rgba(148, 163, 184, 0.18)" strokeWidth="30" />
+                    )}
+                    {chartData.map(function (item) {
+                      if (!total || item.count === 0) {
+                        return null;
+                      }
+                      const sliceAngle = (item.count / total) * Math.PI * 2;
+                      const start = currentAngle;
+                      const end = currentAngle + sliceAngle;
+                      currentAngle = end;
+                      const active = activeSeverity === item.key;
+                      return (
+                        <path
+                          key={item.key}
+                          d={arcPath(110, 110, active ? 88 : 84, 54, start, end)}
+                          fill={item.color}
+                          stroke="#020617"
+                          strokeWidth="2"
+                          onClick={function () {
+                            setVSeverity(item.key);
+                          }}
+                          style={{ cursor: "pointer", opacity: activeSeverity !== "all" && !active ? 0.45 : 1 }}
+                        />
+                      );
+                    })}
+                    <text x="110" y="102" textAnchor="middle" className="vuln-center-number">
+                      {filteredCount}
+                    </text>
+                    <text x="110" y="122" textAnchor="middle" className="vuln-center-label">
+                      {activeSeverity === "all" ? "Visible CVEs" : activeSeverity + " only"}
+                    </text>
+                  </svg>
+                </div>
+                <div className="vuln-legend">
+                  <button
+                    type="button"
+                    className={"vuln-legend-button " + (activeSeverity === "all" ? "active" : "")}
+                    onClick={function () { setVSeverity("all"); }}
+                  >
+                    <span className="vuln-legend-left">
+                      <span className="vuln-swatch" style={{ background: "#38bdf8" }}></span>
+                      <span>All Severities</span>
+                    </span>
+                    <span className="vuln-legend-count">{total}</span>
+                  </button>
+                  {chartData.map(function (item) {
+                    return (
+                      <button
+                        type="button"
+                        key={item.key}
+                        className={"vuln-legend-button " + (activeSeverity === item.key ? "active" : "")}
+                        onClick={function () { setVSeverity(item.key); }}
+                      >
+                        <span className="vuln-legend-left">
+                          <span className="vuln-swatch" style={{ background: item.color }}></span>
+                          <span>{item.label}</span>
+                        </span>
+                        <span className="vuln-legend-count">{item.count}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="vuln-summary-card">
+                <div className="detail-title">Severity Summary</div>
+                <div className="muted">
+                  Click a slice or legend item to show only that severity in the vulnerability list.
+                </div>
+                <div className="vuln-summary-grid">
+                  <div className="vuln-mini-stat">
+                    <div className="vuln-mini-label">Current Filter</div>
+                    <div className="vuln-mini-value">
+                      {activeSeverity === "all"
+                        ? "All"
+                        : activeSeverity.charAt(0).toUpperCase() + activeSeverity.slice(1)}
+                    </div>
+                  </div>
+                  <div className="vuln-mini-stat">
+                    <div className="vuln-mini-label">Visible CVEs</div>
+                    <div className="vuln-mini-value">{filteredCount}</div>
+                  </div>
+                  <div className="vuln-mini-stat">
+                    <div className="vuln-mini-label">Source</div>
+                    <div className="vuln-mini-value">{vSource || "n/a"}</div>
+                  </div>
+                </div>
+                <div className="legend-list" style={{ marginTop: "14px" }}>
+                  {chartData.map(function (item) {
+                    return (
+                      <div className="legend-item" key={item.key}>
+                        <div className="legend-left">
+                          <span className="legend-dot" style={{ background: item.color }}></span>
+                          <span>{item.label} Risk</span>
+                        </div>
+                        <span className="legend-right">{item.count} findings</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        function renderVulnDetailPanel() {
+          const cve = selectedVuln();
+          if (!cve) {
+            return (
+              <div className="vuln-detail-panel">
+                <div className="detail-title">Vulnerability Detail</div>
+                <div className="muted">Select a vulnerability from the table to inspect it in more detail.</div>
+              </div>
+            );
+          }
+
+          return (
+            <div className="vuln-detail-panel">
+              <div className="detail-title">Vulnerability Detail</div>
+              <div className="vuln-id">{cve.id}</div>
+              <div style={{ marginTop: "10px" }}>
+                {renderSeverityBadge(cve)}
+              </div>
+              <div className="vuln-summary-text">{cve.summary || "No summary provided."}</div>
+              <div className="detail-sections" style={{ marginTop: "14px" }}>
+                <div className="detail-card">
+                  <div className="detail-title">Core Metadata</div>
+                  {renderDetailPairs([
+                    { label: "Published", value: formatMaybeDate(cve.Published || cve.published) },
+                    { label: "Modified", value: formatMaybeDate(cve.LastModified || cve.last_modified) },
+                    { label: "Severity", value: cve.severity || "n/a" },
+                    { label: "CVSS", value: cve.cvss != null ? String(cve.cvss) : "n/a" },
+                    { label: "CVSS Version", value: cve.cvssVersion || "n/a" },
+                    { label: "Attack Vector", value: cve.attackVector || "n/a" },
+                    { label: "Attack Complexity", value: cve.attackComplexity || "n/a" },
+                    { label: "Exploitability", value: cve.exploitabilityScore != null ? String(cve.exploitabilityScore) : "n/a" },
+                    { label: "Impact", value: cve.impactScore != null ? String(cve.impactScore) : "n/a" },
+                  ])}
+                </div>
+                <div className="detail-card">
+                  <div className="detail-title">Weaknesses</div>
+                  {renderList(cve.weaknesses, "No CWE weakness information was returned for this CVE.")}
+                </div>
+                <div className="detail-card">
+                  <div className="detail-title">References</div>
+                  {Array.isArray(cve.references) && cve.references.length > 0 ? (
+                    <ul className="reference-list">
+                      {cve.references.map(function (ref, index) {
+                        return (
+                          <li key={(ref.url || "ref") + "-" + index}>
+                            <a href={ref.url} target="_blank" rel="noreferrer">
+                              {ref.source || "Reference"}: {ref.url}
+                            </a>
+                            {Array.isArray(ref.tags) && ref.tags.length > 0 && (
+                              <div className="muted">{ref.tags.join(", ")}</div>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <div className="muted">No reference URLs were returned for this CVE.</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        function exportCsv() {
+          const items = filteredVulns();
+          if (!items.length) {
+            return;
+          }
+          const header = ["CVE", "Summary", "CVSS", "Published"];
+          const lines = [header.join(",")];
+          for (let i = 0; i < items.length; i++) {
+            const cve = items[i];
+            const id = cve.id || "";
+            const summary = cve.summary || "";
+            const score = getCvssScore(cve);
+            const published =
+              cve.Published ||
+              cve.published ||
+              cve.LastModified ||
+              cve.last_modified ||
+              "";
+            const cells = [id, summary, score != null ? String(score) : "", published].map(
+              function (value) {
+                const text = String(value).replace(/"/g, '""');
+                return '"' + text + '"';
+              }
+            );
+            lines.push(cells.join(","));
+          }
+          const blob = new Blob([lines.join("\n")], {
+            type: "text/csv;charset=utf-8;",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "cves.csv";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+
+        function renderMeta() {
+          if (!result) return null;
+
+          if (result.type === "ip") {
+            return (
+              <div className="grid">
+                <div className="stat-card">
+                  <div className="stat-label">Location</div>
+                  <div className="stat-value">
+                    {result.city}, {result.region}
+                    <br />
+                    {result.country}{" "}
+                    {result.country_code ? "(" + result.country_code.toUpperCase() + ")" : ""}
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-label">Network</div>
+                  <div className="stat-value">
+                    {result.org_name}
+                    <br />
+                    ASN {result.as_no}
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-label">ISP</div>
+                  <div className="stat-value">{result.isp}</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-label">Open Ports</div>
+                  <div className="stat-value">
+                    {Array.isArray(result.open_ports)
+                      ? result.open_ports.join(", ")
+                      : "n/a"}
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div className="grid">
+              <div className="stat-card">
+                <div className="stat-label">Technologies</div>
+                <div className="stat-value">
+                  {Array.isArray(result.technologies)
+                    ? result.technologies.join(", ")
+                    : "n/a"}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-label">Connected IPs</div>
+                <div className="stat-value">
+                  {Array.isArray(result.connected_ips)
+                    ? result.connected_ips.join(", ")
+                    : "n/a"}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-label">Subdomains</div>
+                <div className="stat-value">
+                  {Array.isArray(result.subdomains)
+                    ? result.subdomains.join(", ")
+                    : "n/a"}
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-label">Phishing Risk</div>
+                <div className="stat-value">
+                  {result.is_phishing_suspected ? "Suspicious indicators detected" : "No clear signs"}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        function formatMaybeDate(value) {
+          if (!value) return "n/a";
+          const date = new Date(value);
+          if (isNaN(date.getTime())) return String(value);
+          return date.toLocaleString();
+        }
+
+        function renderList(items, emptyLabel) {
+          if (!Array.isArray(items) || items.length === 0) {
+            return <div className="muted">{emptyLabel || "No data available."}</div>;
+          }
+
+          return (
+            <ul className="detail-list">
+              {items.map(function (item, index) {
+                return <li key={String(item) + "-" + index}>{String(item)}</li>;
+              })}
+            </ul>
+          );
+        }
+
+        function renderDetailPairs(pairs) {
+          const visiblePairs = pairs.filter(function (pair) {
+            return pair.value !== null && pair.value !== undefined && pair.value !== "";
+          });
+
+          if (visiblePairs.length === 0) {
+            return <div className="muted">No additional details available.</div>;
+          }
+
+          return (
+            <div className="detail-pairs">
+              {visiblePairs.map(function (pair) {
+                return (
+                  <div className="detail-pair" key={pair.label}>
+                    <div className="detail-key">{pair.label}</div>
+                    <div className="detail-value">{pair.value}</div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        }
+
+        function renderParsedDetails() {
+          if (!result) return null;
+
+          if (result.type === "ip") {
+            return (
+              <div className="detail-sections">
+                <div className="detail-card">
+                  <div className="detail-title">Assessment</div>
+                  {renderList(result.evidence, "No notable exposure evidence was identified.")}
+                </div>
+                <div className="detail-card">
+                  <div className="detail-title">Network Profile</div>
+                  {renderDetailPairs([
+                    { label: "Source", value: result.source || "n/a" },
+                    { label: "Organization", value: result.org_name || "n/a" },
+                    { label: "ISP", value: result.isp || "n/a" },
+                    { label: "ASN", value: result.as_no ? "AS" + result.as_no : "n/a" },
+                    { label: "Location", value: [result.city, result.region, result.country].filter(Boolean).join(", ") || "n/a" },
+                    { label: "Coordinates", value: result.latitude != null && result.longitude != null ? result.latitude + ", " + result.longitude : "n/a" },
+                  ])}
+                </div>
+                <div className="detail-card">
+                  <div className="detail-title">Open Ports</div>
+                  {renderList(result.open_ports, "No common exposed ports were detected in the probe.")}
+                </div>
+                <div className="detail-card">
+                  <div className="detail-title">Tags And Sources</div>
+                  {renderDetailPairs([
+                    { label: "Tags", value: Array.isArray(result.tags) && result.tags.length ? result.tags.join(", ") : "n/a" },
+                    { label: "Sources", value: Array.isArray(result.sources) && result.sources.length ? result.sources.join(", ") : "n/a" },
+                    { label: "RDAP Handle", value: result.rdap && result.rdap.handle ? result.rdap.handle : "n/a" },
+                    { label: "Allocation", value: result.rdap && result.rdap.name ? result.rdap.name : "n/a" },
+                    { label: "Range", value: result.rdap && result.rdap.startAddress && result.rdap.endAddress ? result.rdap.startAddress + " - " + result.rdap.endAddress : "n/a" },
+                  ])}
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div className="detail-sections">
+              <div className="detail-card">
+                <div className="detail-title">Technology Profile</div>
+                {renderList(result.technologies, "No web technology details were detected.")}
+              </div>
+              <div className="detail-card">
+                <div className="detail-title">Connected Infrastructure</div>
+                {renderDetailPairs([
+                  { label: "Connected IPs", value: Array.isArray(result.connected_ips) && result.connected_ips.length ? result.connected_ips.join(", ") : "n/a" },
+                  { label: "Subdomains", value: Array.isArray(result.subdomains) && result.subdomains.length ? result.subdomains.join(", ") : "n/a" },
+                  { label: "Phishing Risk", value: result.is_phishing_suspected ? "Suspicious indicators detected" : "No clear signs" },
+                  { label: "Sources", value: Array.isArray(result.sources) && result.sources.length ? result.sources.join(", ") : "n/a" },
+                ])}
+              </div>
+              <div className="detail-card">
+                <div className="detail-title">Registration And Web</div>
+                {renderDetailPairs([
+                  { label: "RDAP Handle", value: result.rdap && result.rdap.handle ? result.rdap.handle : "n/a" },
+                  { label: "Created", value: result.rdap ? formatMaybeDate(result.rdap.created) : "n/a" },
+                  { label: "Expires", value: result.rdap ? formatMaybeDate(result.rdap.expires) : "n/a" },
+                  { label: "Endpoint", value: result.web && result.web.url ? result.web.url : "n/a" },
+                  { label: "HTTP Status", value: result.web && result.web.status ? String(result.web.status) : "n/a" },
+                  { label: "Page Title", value: result.web && result.web.title ? result.web.title : "n/a" },
+                ])}
+              </div>
+              <div className="detail-card">
+                <div className="detail-title">Evidence</div>
+                {renderList(result.evidence, "No suspicious evidence was identified in the current enrichment set.")}
+              </div>
+            </div>
+          );
+        }
+
+        function getRiskNumeric(kind) {
+          if (!result || !result.score) return 0;
+          const value = kind === "outbound" ? result.score.outboundNumeric : result.score.inboundNumeric;
+          return typeof value === "number" ? Math.max(0, Math.min(100, value)) : 0;
+        }
+
+        function riskColor(score) {
+          if (score >= 70) return "#ef4444";
+          if (score >= 40) return "#f59e0b";
+          return "#22c55e";
+        }
+
+        function sourceDescriptor(source) {
+          const value = String(source || "").toLowerCase();
+          if (value.includes("rdap")) return "Registration";
+          if (value.includes("dns")) return "Resolution";
+          if (value.includes("crt")) return "Certificates";
+          if (value.includes("geo") || value.includes("ip-api")) return "Geolocation";
+          if (value.includes("probe") || value.includes("scan")) return "Active Probe";
+          return "Threat Feed";
+        }
+
+        function sourceDescription(source) {
+          const value = String(source || "").toLowerCase();
+          if (value.includes("rdap")) return "Ownership and registration context for the asset.";
+          if (value.includes("dns")) return "Name resolution and infrastructure mapping.";
+          if (value.includes("crt")) return "Certificate transparency sightings and related hostnames.";
+          if (value.includes("ip-api")) return "Geo and provider attribution for the address.";
+          if (value.includes("probe")) return "Live HTTP and service fingerprinting from the target.";
+          if (value.includes("scan")) return "Live exposure check across common service ports.";
+          return "Supplemental enrichment source contributing to this assessment.";
+        }
+
+        function renderRingCard(title, score, label, segments) {
+          return (
+            <div className="chart-card">
+              <div className="chart-heading">
+                <div className="chart-title">{title}</div>
+                <div className="chart-number">{score}/100</div>
+              </div>
+              <div className="ring-wrap">
+                <div
+                  className="ring-chart"
+                  style={{
+                    "--angle": Math.round((score / 100) * 360) + "deg",
+                    "--ring-color": riskColor(score),
+                  }}
+                >
+                  <div className="ring-inner">
+                    <div className="ring-score">{score}</div>
+                    <div className="ring-label">{label}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="legend-list">
+                {segments.map(function (segment) {
+                  return (
+                    <div className="legend-item" key={segment.label}>
+                      <div className="legend-left">
+                        <span className="legend-dot" style={{ background: segment.color }}></span>
+                        <span>{segment.label}</span>
+                      </div>
+                      <span className="legend-right">{segment.value}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        }
+
+        function renderDashboard() {
+          if (!result) return null;
+
+          const inbound = getRiskNumeric("inbound");
+          const outbound = getRiskNumeric("outbound");
+          const sourceCount = Array.isArray(result.sources) ? result.sources.length : 0;
+          const evidenceCount = Array.isArray(result.evidence) ? result.evidence.length : 0;
+          const tagCount = Array.isArray(result.tags) ? result.tags.length : 0;
+          const primarySurface = result.type === "ip"
+            ? Array.isArray(result.open_ports) ? result.open_ports.length : 0
+            : Array.isArray(result.connected_ips) ? result.connected_ips.length : 0;
+          const secondarySurface = result.type === "ip"
+            ? Array.isArray(result.tags) ? result.tags.length : 0
+            : Array.isArray(result.subdomains) ? result.subdomains.length : 0;
+          const heroAlert = inbound >= 40 || evidenceCount > 1;
+
+          return (
+            <div className="dashboard-shell">
+              <div className="hero-grid">
+                <div className={"hero-card " + (heroAlert ? "alert" : "")}>
+                  <div className="hero-kicker">
+                    {result.type === "ip" ? "Live Infrastructure Assessment" : "Domain Exposure Assessment"}
+                  </div>
+                  <div className="hero-headline">
+                    {result.type === "ip" ? result.ip : result.domain}
+                  </div>
+                  <div className="hero-copy">
+                    {result.type === "ip"
+                      ? "Cyberweb has correlated geolocation, registration, port exposure, and enrichment sources to estimate the attack surface and operational profile of this address."
+                      : "Cyberweb has correlated DNS, registration, certificate transparency, and live web fingerprints to estimate technology posture and external exposure for this domain."}
+                  </div>
+                  <div className="hero-strip">
+                    <div className="hero-metric">
+                      <div className="hero-metric-label">Threat Sources</div>
+                      <div className="hero-metric-value">{sourceCount}</div>
+                    </div>
+                    <div className="hero-metric">
+                      <div className="hero-metric-label">Observed Signals</div>
+                      <div className="hero-metric-value">{evidenceCount}</div>
+                    </div>
+                    <div className="hero-metric">
+                      <div className="hero-metric-label">
+                        {result.type === "ip" ? "Open Services" : "Infra Links"}
+                      </div>
+                      <div className="hero-metric-value">{primarySurface}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="chart-grid">
+                  {renderRingCard("Inbound Risk", inbound, result.score.inbound || "n/a", [
+                    { label: "Evidence", value: evidenceCount, color: "#38bdf8" },
+                    { label: "Tags", value: tagCount, color: "#a78bfa" },
+                    { label: result.type === "ip" ? "Ports" : "Subdomains", value: secondarySurface, color: riskColor(inbound) },
+                  ])}
+                  {renderRingCard("Outbound Risk", outbound, result.score.outbound || "n/a", [
+                    { label: "Sources", value: sourceCount, color: "#34d399" },
+                    { label: result.type === "ip" ? "Geo Signals" : "Connected IPs", value: primarySurface, color: "#f59e0b" },
+                    { label: "Assessment", value: heroAlert ? "Elevated" : "Routine", color: riskColor(outbound) },
+                  ])}
+                </div>
+              </div>
+
+              <div className="source-grid">
+                {(Array.isArray(result.sources) ? result.sources : []).map(function (source) {
+                  return (
+                    <div className="source-card" key={source}>
+                      <div className="source-name">{source}</div>
+                      <div className="source-type">{sourceDescriptor(source)}</div>
+                      <div className="source-copy">{sourceDescription(source)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {renderParsedDetails()}
+            </div>
+          );
+        }
+
+        function renderPills() {
+          if (!result) {
+            return (
+              <div className="pill-row">
+                <div className="pill">Asset</div>
+                <div className="pill">Domain</div>
+                <div className="pill">Exploit</div>
+                <div className="pill">Image</div>
+              </div>
+            );
+          }
+          const items = [];
+          if (result.type === "ip") {
+            items.push({ label: "Asset", kind: "primary" });
+            items.push({ label: "Open Ports", kind: "primary" });
+            items.push({ label: "VPN / Proxy", kind: "warning" });
+          } else {
+            items.push({ label: "Domain", kind: "primary" });
+            items.push({ label: "Phishing", kind: "warning" });
+            items.push({ label: "Malware", kind: "danger" });
+          }
+          return (
+            <div className="pill-row">
+              {items.map((item) => (
+                <div key={item.label} className={"pill " + item.kind}>
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          );
+        }
+
+        function renderAssetLayout() {
+          return (
+            <div className="layout-row">
+              <section className="search-panel">
+                <form onSubmit={handleSearch}>
+                  <label htmlFor="query-input">Search IP / Domain</label>
+                  <input
+                    id="query-input"
+                    placeholder="8.8.8.8 or example.com"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    autoComplete="off"
+                  />
+                  <button type="submit" disabled={loading}>
+                    {loading ? "Scanning…" : "Run Intelligence Scan"}
+                  </button>
+                  {error && <div className="hint" style={{ color: "#fecaca" }}>{error}</div>}
+                </form>
+                {renderPills()}
+              </section>
+
+              <section className="result-panel">
+                <div className="result-header">
+                  <div className="result-title">
+                    {result
+                      ? result.type === "ip"
+                        ? "Asset intelligence"
+                        : "Domain intelligence"
+                      : "No scan yet"}
+                  </div>
+                  <div className="score-badges">
+                    <div
+                      className={
+                        "badge " +
+                        scoreBadgeLevel(
+                          result && result.score ? result.score.inbound : null
+                        )
+                      }
+                    >
+                      <span className="badge-label">Inbound</span>
+                      <span className="badge-value">
+                        {result && result.score && result.score.inbound
+                          ? result.score.inbound
+                          : "—"}
+                      </span>
+                    </div>
+                    <div
+                      className={
+                        "badge " +
+                        scoreBadgeLevel(
+                          result && result.score ? result.score.outbound : null
+                        )
+                      }
+                    >
+                      <span className="badge-label">Outbound</span>
+                      <span className="badge-value">
+                        {result && result.score && result.score.outbound
+                          ? result.score.outbound
+                          : "—"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {!result && (
+                  <div className="muted">
+                    Submit a query on the left to generate a threat intelligence style report for
+                    an IP or domain.
+                  </div>
+                )}
+                {renderMeta()}
+                {renderDashboard()}
+              </section>
+            </div>
+          );
+        }
+
+        function renderVulnLayout() {
+          return (
+            <div className="layout-row">
+              <section className="search-panel">
+                <form onSubmit={handleVulnSearch}>
+                  <label htmlFor="vendor-input">Vendor</label>
+                  {vendorOptions.length > 0 ? (
+                    <select
+                      id="vendor-input"
+                      value={vVendor}
+                      onChange={function (e) {
+                        setVVendor(e.target.value);
+                        setVProduct("");
+                      }}
+                      style={{
+                        marginTop: "8px",
+                        width: "100%",
+                        padding: "8px 10px",
+                        borderRadius: "10px",
+                        border: "1px solid #374151",
+                        background: "#020617",
+                        color: "#f9fafb",
+                      }}
+                    >
+                      <option value="">Select vendor</option>
+                      {vendorOptions.map(function (v) {
+                        return (
+                          <option key={v} value={v}>
+                            {v}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  ) : (
+                    <input
+                      id="vendor-input"
+                      placeholder="microsoft"
+                      value={vVendor}
+                      onChange={(e) => setVVendor(e.target.value)}
+                    />
+                  )}
+                  <label htmlFor="product-input" style={{ marginTop: "12px", display: "block" }}>
+                    Product
+                  </label>
+                  {productOptions.length > 0 ? (
+                    <select
+                      id="product-input"
+                      value={vProduct}
+                      onChange={function (e) {
+                        setVProduct(e.target.value);
+                      }}
+                      style={{
+                        marginTop: "8px",
+                        width: "100%",
+                        padding: "8px 10px",
+                        borderRadius: "10px",
+                        border: "1px solid #374151",
+                        background: "#020617",
+                        color: "#f9fafb",
+                      }}
+                    >
+                      <option value="">Select product</option>
+                      {productOptions.map(function (p) {
+                        return (
+                          <option key={p} value={p}>
+                            {p}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  ) : (
+                    <input
+                      id="product-input"
+                      placeholder="office"
+                      value={vProduct}
+                      onChange={(e) => setVProduct(e.target.value)}
+                    />
+                  )}
+                  <button type="submit" disabled={vLoading}>
+                    {vLoading ? "Searching…" : "Search CVEs"}
+                  </button>
+                  <label
+                    htmlFor="severity-select"
+                    style={{ marginTop: "12px", display: "block" }}
+                  >
+                    Severity
+                  </label>
+                  <select
+                    id="severity-select"
+                    value={vSeverity}
+                    onChange={(e) => setVSeverity(e.target.value)}
+                    style={{
+                      marginTop: "8px",
+                      width: "100%",
+                      padding: "8px 10px",
+                      borderRadius: "10px",
+                      border: "1px solid #374151",
+                      background: "#020617",
+                      color: "#f9fafb",
+                    }}
+                  >
+                    <option value="all">All</option>
+                    <option value="low">Low (&lt; 4.0)</option>
+                    <option value="medium">Medium (4.0–6.9)</option>
+                    <option value="high">High (7.0–8.9)</option>
+                    <option value="critical">Critical (≥ 9.0)</option>
+                  </select>
+                  <label
+                    htmlFor="from-date"
+                    style={{ marginTop: "12px", display: "block" }}
+                  >
+                    From
+                  </label>
+                  <input
+                    id="from-date"
+                    type="date"
+                    value={vDateFrom}
+                    onChange={(e) => setVDateFrom(e.target.value)}
+                  />
+                  <label htmlFor="to-date" style={{ marginTop: "12px", display: "block" }}>
+                    To
+                  </label>
+                  <input
+                    id="to-date"
+                    type="date"
+                    value={vDateTo}
+                    onChange={(e) => setVDateTo(e.target.value)}
+                  />
+                  <button type="button" disabled={vItems.length === 0} onClick={exportCsv}>
+                    Export CSV
+                  </button>
+                  {vError && <div className="hint" style={{ color: "#fecaca" }}>{vError}</div>}
+                  {!vError && (
+                    <div className="hint">
+                      Data is fetched live from public CVE APIs (cve.circl.lu and NVD) for the chosen
+                      vendor/product.
+                    </div>
+                  )}
+                </form>
+              </section>
+
+              <section className="result-panel">
+                <div className="result-header">
+                  <div className="result-title">Vulnerabilities</div>
+                </div>
+                {vItems.length === 0 && !vLoading && !vError && (
+                  <div className="muted">
+                    Enter a vendor and product to list public CVEs. Example: vendor{" "}
+                    <strong>microsoft</strong>, product <strong>office</strong>.
+                  </div>
+                )}
+                {vItems.length > 0 && (
+                  <div>
+                    {renderVulnSeverityChart()}
+                    <div className="muted">
+                      Showing {filteredVulns().length} of {vItems.length} CVEs from{" "}
+                      {vSource || "public CVE APIs"} for this vendor/product.
+                    </div>
+                    <div className="vuln-results-layout">
+                      <div>
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th style={{ width: "18%" }}>CVE</th>
+                              <th style={{ width: "13%" }}>Published</th>
+                              <th>Summary</th>
+                              <th style={{ width: "12%" }}>CVSS</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredVulns().map((cve) => (
+                              <tr
+                                key={cve.id}
+                                className={"clickable-row " + ((selectedVuln() && selectedVuln().id === cve.id) ? "active" : "")}
+                                onClick={() => setSelectedCveId(cve.id)}
+                              >
+                                <td>{cve.id}</td>
+                                <td>{cve.Published ? new Date(cve.Published).toLocaleDateString() : "n/a"}</td>
+                                <td>
+                                  <div>{cve.summary}</div>
+                                  <div className="muted" style={{ marginTop: "4px" }}>
+                                    {cve.weaknesses && cve.weaknesses.length
+                                      ? cve.weaknesses.slice(0, 2).join(", ")
+                                      : cve.attackVector || "No weakness metadata"}
+                                  </div>
+                                </td>
+                                <td>{renderSeverityBadge(cve)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      {renderVulnDetailPanel()}
+                    </div>
+                  </div>
+                )}
+              </section>
+            </div>
+          );
+        }
+
+        return (
+          <div>
+            <header>
+              <div>
+                <h1>Cyberweb · CTI Search</h1>
+                <span>Explore security posture of IPs and domains in real time.</span>
+              </div>
+            </header>
+            <main>
+              <div className="mode-tabs">
+                <button
+                  className={"mode-tab " + (mode === "asset" ? "active" : "")}
+                  type="button"
+                  onClick={() => setMode("asset")}
+                >
+                  Asset Search
+                </button>
+                <button
+                  className={"mode-tab " + (mode === "vuln" ? "active" : "")}
+                  type="button"
+                  onClick={() => setMode("vuln")}
+                >
+                  Vulnerabilities
+                </button>
+              </div>
+              {mode === "asset" ? renderAssetLayout() : renderVulnLayout()}
+            </main>
+            <footer></footer>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
