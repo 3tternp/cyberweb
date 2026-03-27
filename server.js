@@ -4,6 +4,8 @@ const cors = require("cors");
 const fetch = require("node-fetch");
 const net = require("net");
 const { buildAssetResponse } = require("./services/assetIntel");
+const { searchAhmia } = require("./providers/ahmia");
+const { checkBreach, checkPastes } = require("./providers/hibp");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -502,6 +504,147 @@ app.get("/api/cve/products", async (req, res) => {
   }
 });
 
+// ── Dark Web Monitor routes ───────────────────────────────────────────────────
+
+app.get("/api/darkweb/search", async (req, res) => {
+  const { q } = req.query;
+  if (!q || !String(q).trim()) {
+    return res.status(400).json({ error: "Query parameter q is required" });
+  }
+  try {
+    const result = await searchAhmia(String(q).trim());
+    return res.json(result);
+  } catch (err) {
+    return res.status(502).json({ error: "Dark web search failed", detail: err.message });
+  }
+});
+
+app.get("/api/darkweb/breach", async (req, res) => {
+  const { email } = req.query;
+  if (!email || !String(email).trim()) {
+    return res.status(400).json({ error: "Email parameter is required" });
+  }
+  const trimmed = String(email).trim();
+  try {
+    const [breachResult, pastes] = await Promise.all([
+      checkBreach(trimmed),
+      checkPastes(trimmed),
+    ]);
+    return res.json({ ...breachResult, pastes: pastes || [] });
+  } catch (err) {
+    return res.status(502).json({ error: "Breach check failed", detail: err.message });
+  }
+});
+
+app.get("/api/darkweb/resources", (_req, res) => {
+  res.json({
+    searchEngines: [
+      {
+        name: "Ahmia",
+        url: "https://ahmia.fi",
+        type: "clearnet",
+        description: "Clearnet search engine that indexes .onion hidden services on the Tor network.",
+      },
+      {
+        name: "Torch",
+        onion: "xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5ayieonly2dfzljkybaad.onion",
+        type: "onion",
+        description: "One of the oldest and largest Tor search engines with millions of indexed pages.",
+      },
+      {
+        name: "HayStack",
+        onion: "haystak5njsmn2hqkewecpaxetahtwhsbsa64jom2k22z5afxhnpxfid.onion",
+        type: "onion",
+        description: "Large-scale dark web index with over 1.5 billion crawled pages.",
+      },
+      {
+        name: "Tor66",
+        onion: "tor66sewebgixwhcqfnp5higgiuw4isdmfuoceqqczfciqnuafonb6ad.onion",
+        type: "onion",
+        description: "Lightweight Tor search engine and fresh .onion link indexer.",
+      },
+    ],
+    breachTools: [
+      {
+        name: "HaveIBeenPwned",
+        url: "https://haveibeenpwned.com",
+        type: "clearnet",
+        description: "Check if an email or password has appeared in known public data breaches.",
+      },
+      {
+        name: "DeHashed",
+        url: "https://dehashed.com",
+        type: "clearnet",
+        description: "Search leaked credentials, emails, usernames, IPs across breach databases.",
+      },
+      {
+        name: "LeakOSINT",
+        url: "https://leakosint.com",
+        type: "clearnet",
+        description: "OSINT platform for querying data leaks and breach intelligence sources.",
+      },
+    ],
+    telegramOsint: [
+      {
+        name: "Telemetry",
+        handle: "@telemetrybot",
+        url: "https://t.me/telemetrybot",
+        type: "telegram",
+        description: "Telegram OSINT bot for phone number, username, and Telegram ID lookups.",
+      },
+      {
+        name: "UniversalSearchBot",
+        handle: "@UniversalSearchBot",
+        url: "https://t.me/UniversalSearchBot",
+        type: "telegram",
+        description: "Multi-source OSINT search across emails, phones, usernames, and IPs.",
+      },
+    ],
+    directories: [
+      {
+        name: "Hidden Wiki",
+        url: "https://thehiddenwiki.org",
+        onion: "zqktlwiuavvvqqt4ybvgvi7tyo4hjl5xgfuvpdf6otjiycgwqbym2qad.onion/wiki/",
+        type: "onion",
+        description: "Community-maintained directory and wiki of .onion services.",
+      },
+      {
+        name: "Tor.link",
+        url: "https://tor.link",
+        type: "clearnet",
+        description: "Clearnet proxy and curated .onion link directory for Tor services.",
+      },
+      {
+        name: "Onion.live",
+        url: "https://onion.live",
+        type: "clearnet",
+        description: "Real-time uptime monitor and directory of live .onion services.",
+      },
+    ],
+    securityTools: [
+      {
+        name: "PGP Tool",
+        url: "https://pgptool.org",
+        type: "clearnet",
+        description: "Browser-based PGP encryption and decryption for secure dark web communications.",
+      },
+      {
+        name: "TorCrawl.py",
+        url: "https://github.com/MikeMeliz/TorCrawl.py",
+        type: "tool",
+        description: "Python-based crawler for .onion sites using Tor SOCKS proxy.",
+      },
+      {
+        name: "DeepDarkCTI",
+        url: "https://github.com/fastfire/deepdarkCTI",
+        type: "tool",
+        description: "Curated collection of CTI threat intelligence feeds sourced from dark web forums.",
+      },
+    ],
+  });
+});
+
+// ── SPA fallback ──────────────────────────────────────────────────────────────
 app.get("*", (req, res) => {
   res.sendFile(path.join(publicDir, "index.html"));
 });

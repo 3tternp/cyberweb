@@ -662,6 +662,274 @@
         background: #020617;
         text-align: center;
       }
+      /* ── Dark Web Monitor ─────────────────────────────────── */
+      .dw-warning {
+        margin-bottom: 14px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.22);
+        color: #fca5a5;
+        font-size: 0.76rem;
+        line-height: 1.55;
+      }
+      .dw-warning strong {
+        color: #ef4444;
+      }
+      .dw-type-row {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+      .dw-type-btn {
+        flex: 1;
+        margin-top: 0;
+        padding: 7px 8px;
+        font-size: 0.76rem;
+        background: #08101d;
+        border: 1px solid #1f2937;
+        color: #9ca3af;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .dw-type-btn.active {
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+        color: #f9fafb;
+        border-color: transparent;
+      }
+      .dw-tag {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.6rem;
+        padding: 1px 5px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 600;
+      }
+      .dw-tag.onion {
+        background: rgba(167, 139, 250, 0.14);
+        color: #c4b5fd;
+        border: 1px solid rgba(167, 139, 250, 0.25);
+      }
+      .dw-tag.clearnet {
+        background: rgba(52, 211, 153, 0.12);
+        color: #6ee7b7;
+        border: 1px solid rgba(52, 211, 153, 0.2);
+      }
+      .dw-tag.telegram {
+        background: rgba(56, 189, 248, 0.12);
+        color: #7dd3fc;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+      }
+      .dw-tag.tool {
+        background: rgba(251, 191, 36, 0.12);
+        color: #fcd34d;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+      }
+      /* Search results */
+      .dw-results-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .dw-result-card {
+        border-radius: 12px;
+        padding: 12px 14px;
+        border: 1px solid #172036;
+        background: linear-gradient(180deg, #07111e, #030813);
+      }
+      .dw-result-title {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #7dd3fc;
+        text-decoration: none;
+        display: block;
+      }
+      .dw-result-title:hover { text-decoration: underline; }
+      .dw-result-url {
+        margin-top: 3px;
+        font-size: 0.7rem;
+        color: #4ade80;
+        font-family: ui-monospace, monospace;
+        word-break: break-all;
+      }
+      .dw-result-desc {
+        margin-top: 6px;
+        font-size: 0.8rem;
+        color: #94a3b8;
+        line-height: 1.45;
+      }
+      /* Breach results */
+      .dw-breach-hero {
+        border-radius: 14px;
+        padding: 16px;
+        border: 1px solid #172036;
+        background: linear-gradient(160deg, #0d0508, #030813);
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .dw-breach-hero.safe {
+        background: linear-gradient(160deg, #040d08, #030813);
+        border-color: rgba(34, 197, 94, 0.2);
+      }
+      .dw-breach-count-big {
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #ef4444;
+        line-height: 1;
+      }
+      .dw-breach-count-big.safe { color: #22c55e; }
+      .dw-breach-hero-label {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
+      .dw-breach-list {
+        margin-top: 10px;
+        display: grid;
+        gap: 6px;
+        max-height: 340px;
+        overflow-y: auto;
+      }
+      .dw-breach-item {
+        border-radius: 10px;
+        padding: 10px 12px;
+        background: rgba(239, 68, 68, 0.06);
+        border: 1px solid rgba(239, 68, 68, 0.18);
+        display: grid;
+        gap: 4px;
+      }
+      .dw-breach-name {
+        font-size: 0.86rem;
+        font-weight: 600;
+        color: #fca5a5;
+      }
+      .dw-breach-meta {
+        font-size: 0.73rem;
+        color: #94a3b8;
+      }
+      .dw-breach-classes {
+        margin-top: 4px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .dw-breach-class-pill {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(239, 68, 68, 0.12);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+      }
+      .dw-nokey-card {
+        border-radius: 14px;
+        padding: 16px;
+        border: 1px solid rgba(234, 179, 8, 0.25);
+        background: rgba(234, 179, 8, 0.05);
+        margin-top: 10px;
+      }
+      .dw-nokey-title {
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #fde68a;
+        margin-bottom: 6px;
+      }
+      .dw-nokey-body {
+        font-size: 0.78rem;
+        color: #d1d5db;
+        line-height: 1.55;
+      }
+      /* Pastes */
+      .dw-paste-item {
+        border-radius: 10px;
+        padding: 8px 12px;
+        background: rgba(249, 115, 22, 0.07);
+        border: 1px solid rgba(249, 115, 22, 0.2);
+        font-size: 0.8rem;
+        color: #fed7aa;
+      }
+      /* Resource hub */
+      .dw-hub {
+        margin-top: 20px;
+      }
+      .dw-hub-heading {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #4b5563;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #111827;
+        margin-bottom: 14px;
+      }
+      .dw-section {
+        margin-bottom: 16px;
+      }
+      .dw-section-title {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #6b7280;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dw-section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #1f2937;
+      }
+      .dw-item-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 7px;
+      }
+      .dw-item {
+        border-radius: 10px;
+        padding: 10px 12px;
+        border: 1px solid #1f2937;
+        background: #08101d;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .dw-item-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .dw-item-name {
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: #e5e7eb;
+      }
+      .dw-item-desc {
+        font-size: 0.73rem;
+        color: #6b7280;
+        line-height: 1.4;
+      }
+      .dw-item-link {
+        font-size: 0.71rem;
+        color: #7dd3fc;
+        text-decoration: none;
+        margin-top: 3px;
+        display: inline-block;
+      }
+      .dw-item-link:hover { text-decoration: underline; }
+      .dw-item-onion {
+        font-size: 0.66rem;
+        color: #c4b5fd;
+        font-family: ui-monospace, monospace;
+        word-break: break-all;
+        margin-top: 2px;
+      }
+
       @media (max-width: 800px) {
         main {
           flex-direction: column;
@@ -697,6 +965,34 @@
 
     <script type="text/babel">
       const { useState, useEffect } = React;
+
+      const DW_RESOURCES = {
+        searchEngines: [
+          { name: "Ahmia", url: "https://ahmia.fi", type: "clearnet", description: "Clearnet search engine indexing .onion hidden services on Tor." },
+          { name: "Torch", onion: "xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5ayieonly2dfzljkybaad.onion", type: "onion", description: "One of the oldest Tor search engines with millions of pages." },
+          { name: "HayStack", onion: "haystak5njsmn2hqkewecpaxetahtwhsbsa64jom2k22z5afxhnpxfid.onion", type: "onion", description: "Large-scale dark web index with 1.5B+ crawled pages." },
+          { name: "Tor66", onion: "tor66sewebgixwhcqfnp5higgiuw4isdmfuoceqqczfciqnuafonb6ad.onion", type: "onion", description: "Lightweight Tor search engine and fresh .onion link indexer." },
+        ],
+        breachTools: [
+          { name: "HaveIBeenPwned", url: "https://haveibeenpwned.com", type: "clearnet", description: "Check if an email appeared in known public data breaches." },
+          { name: "DeHashed", url: "https://dehashed.com", type: "clearnet", description: "Search leaked credentials, emails and usernames across breach DBs." },
+          { name: "LeakOSINT", url: "https://leakosint.com", type: "clearnet", description: "OSINT platform for querying data leaks and breach intelligence." },
+        ],
+        telegramOsint: [
+          { name: "Telemetry", handle: "@telemetrybot", url: "https://t.me/telemetrybot", type: "telegram", description: "Telegram OSINT for phone number, username and ID lookups." },
+          { name: "UniversalSearchBot", handle: "@UniversalSearchBot", url: "https://t.me/UniversalSearchBot", type: "telegram", description: "Multi-source OSINT: emails, phones, usernames, IPs." },
+        ],
+        directories: [
+          { name: "Hidden Wiki", url: "https://thehiddenwiki.org", onion: "zqktlwiuavvvqqt4ybvgvi7tyo4hjl5xgfuvpdf6otjiycgwqbym2qad.onion/wiki/", type: "onion", description: "Community-maintained directory and wiki of .onion services." },
+          { name: "Tor.link", url: "https://tor.link", type: "clearnet", description: "Clearnet proxy and curated .onion link directory." },
+          { name: "Onion.live", url: "https://onion.live", type: "clearnet", description: "Real-time uptime monitor and directory of live .onion services." },
+        ],
+        securityTools: [
+          { name: "PGP Tool", url: "https://pgptool.org", type: "clearnet", description: "Browser-based PGP encryption for secure dark web comms." },
+          { name: "TorCrawl.py", url: "https://github.com/MikeMeliz/TorCrawl.py", type: "tool", description: "Python crawler for .onion sites via Tor SOCKS proxy." },
+          { name: "DeepDarkCTI", url: "https://github.com/fastfire/deepdarkCTI", type: "tool", description: "Curated CTI feeds sourced from dark web forums and markets." },
+        ],
+      };
 
       const popularVendorProducts = {
         microsoft: ["windows", "office", "azure", "defender", "sql_server"],
@@ -741,6 +1037,14 @@
         const [vendorOptions, setVendorOptions] = useState(popularVendorKeys);
         const [productOptions, setProductOptions] = useState([]);
         const [selectedCveId, setSelectedCveId] = useState("");
+
+        // Dark Web Monitor state
+        const [dwSearchType, setDwSearchType] = useState("breach");
+        const [dwQuery, setDwQuery] = useState("");
+        const [dwLoading, setDwLoading] = useState(false);
+        const [dwError, setDwError] = useState("");
+        const [dwBreachResult, setDwBreachResult] = useState(null);
+        const [dwSearchResults, setDwSearchResults] = useState(null);
 
         useEffect(function () {
           async function loadVendors() {
@@ -1626,6 +1930,307 @@
           );
         }
 
+        async function handleDwSubmit(e) {
+          e.preventDefault();
+          setDwError("");
+          const q = dwQuery.trim();
+          if (!q) {
+            setDwError(dwSearchType === "breach" ? "Enter an email address." : "Enter a search keyword.");
+            return;
+          }
+          setDwLoading(true);
+          setDwBreachResult(null);
+          setDwSearchResults(null);
+          try {
+            if (dwSearchType === "breach") {
+              const params = new URLSearchParams({ email: q });
+              const res = await fetch("/api/darkweb/breach?" + params.toString());
+              const data = await res.json();
+              setDwBreachResult(data);
+            } else {
+              const params = new URLSearchParams({ q });
+              const res = await fetch("/api/darkweb/search?" + params.toString());
+              const data = await res.json();
+              setDwSearchResults(data);
+            }
+          } catch (err) {
+            setDwError(err.message || "Unexpected error");
+          } finally {
+            setDwLoading(false);
+          }
+        }
+
+        function renderDwTag(type) {
+          const labels = { onion: "ONION", clearnet: "WWW", telegram: "TG", tool: "TOOL" };
+          return <span className={"dw-tag " + (type || "clearnet")}>{labels[type] || "WWW"}</span>;
+        }
+
+        function renderDwResourceHub() {
+          const sections = [
+            { key: "searchEngines", label: "Search Engines", items: DW_RESOURCES.searchEngines },
+            { key: "breachTools", label: "Data Breach Tools", items: DW_RESOURCES.breachTools },
+            { key: "telegramOsint", label: "Telegram OSINT", items: DW_RESOURCES.telegramOsint },
+            { key: "directories", label: "Dark Web Directories", items: DW_RESOURCES.directories },
+            { key: "securityTools", label: "Security Tools", items: DW_RESOURCES.securityTools },
+          ];
+          return (
+            <div className="dw-hub">
+              <div className="dw-hub-heading">Dark Web Resource Hub</div>
+              {sections.map(function (section) {
+                return (
+                  <div className="dw-section" key={section.key}>
+                    <div className="dw-section-title">{section.label}</div>
+                    <div className="dw-item-grid">
+                      {section.items.map(function (item) {
+                        const href = item.url || null;
+                        return (
+                          <div className="dw-item" key={item.name}>
+                            <div className="dw-item-top">
+                              <span className="dw-item-name">{item.name}</span>
+                              {renderDwTag(item.type)}
+                            </div>
+                            <div className="dw-item-desc">{item.description}</div>
+                            {item.handle && (
+                              <a className="dw-item-link" href={item.url} target="_blank" rel="noreferrer">{item.handle}</a>
+                            )}
+                            {!item.handle && href && (
+                              <a className="dw-item-link" href={href} target="_blank" rel="noreferrer">{href}</a>
+                            )}
+                            {item.onion && (
+                              <div className="dw-item-onion">{item.onion}</div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        }
+
+        function renderBreachResults() {
+          const r = dwBreachResult;
+          if (!r) return null;
+
+          if (r.error) {
+            return <div className="hint" style={{ color: "#fecaca", marginTop: "10px" }}>{r.error}</div>;
+          }
+
+          if (r.noApiKey) {
+            return (
+              <div className="dw-nokey-card">
+                <div className="dw-nokey-title">HIBP API Key Not Configured</div>
+                <div className="dw-nokey-body">
+                  {r.message}
+                  <br /><br />
+                  <a className="dw-item-link" href={r.hibpUrl} target="_blank" rel="noreferrer">
+                    Check {r.email} on HaveIBeenPwned directly →
+                  </a>
+                </div>
+              </div>
+            );
+          }
+
+          const breaches = r.breaches || [];
+          const pastes = r.pastes || [];
+          return (
+            <div>
+              <div className={"dw-breach-hero " + (r.found ? "" : "safe")}>
+                <div>
+                  <div className={"dw-breach-count-big " + (r.found ? "" : "safe")}>{r.count || 0}</div>
+                  <div className="dw-breach-hero-label">{r.found ? "breaches found" : "no breaches found"}</div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div className="stat-label">{r.email}</div>
+                  {pastes.length > 0 && (
+                    <div className="muted" style={{ marginTop: "4px" }}>{pastes.length} paste(s) found</div>
+                  )}
+                  {!r.found && (
+                    <div style={{ color: "#86efac", fontSize: "0.82rem", marginTop: "4px" }}>
+                      This address was not found in any known public data breach.
+                    </div>
+                  )}
+                </div>
+              </div>
+              {breaches.length > 0 && (
+                <div className="dw-breach-list">
+                  {breaches.map(function (b) {
+                    return (
+                      <div className="dw-breach-item" key={b.Name}>
+                        <div className="dw-breach-name">{b.Title || b.Name}</div>
+                        <div className="dw-breach-meta">
+                          {b.BreachDate && "Breach date: " + b.BreachDate}
+                          {b.PwnCount && " · " + b.PwnCount.toLocaleString() + " accounts"}
+                          {b.Domain && " · " + b.Domain}
+                        </div>
+                        {Array.isArray(b.DataClasses) && b.DataClasses.length > 0 && (
+                          <div className="dw-breach-classes">
+                            {b.DataClasses.slice(0, 6).map(function (cls) {
+                              return <span className="dw-breach-class-pill" key={cls}>{cls}</span>;
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {pastes.length > 0 && (
+                <div style={{ marginTop: "10px" }}>
+                  <div className="detail-title" style={{ marginBottom: "6px" }}>Paste Exposures</div>
+                  <div style={{ display: "grid", gap: "6px" }}>
+                    {pastes.map(function (p, i) {
+                      return (
+                        <div className="dw-paste-item" key={(p.Id || "") + i}>
+                          {p.Source} {p.Title ? "· " + p.Title : ""} {p.Date ? "· " + p.Date : ""}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        function renderDwSearchResults() {
+          const r = dwSearchResults;
+          if (!r) return null;
+          if (r.error) {
+            return (
+              <div>
+                <div className="hint" style={{ color: "#fecaca", marginTop: "10px" }}>
+                  Ahmia search error: {r.error}
+                </div>
+                <div style={{ marginTop: "8px" }}>
+                  <a className="dw-item-link" href={"https://ahmia.fi/search/?q=" + encodeURIComponent(dwQuery)} target="_blank" rel="noreferrer">
+                    Open search on Ahmia.fi directly →
+                  </a>
+                </div>
+              </div>
+            );
+          }
+          const results = r.results || [];
+          if (results.length === 0) {
+            return (
+              <div>
+                <div className="muted" style={{ marginTop: "10px" }}>No results returned from Ahmia for this query.</div>
+                <div style={{ marginTop: "8px" }}>
+                  <a className="dw-item-link" href={"https://ahmia.fi/search/?q=" + encodeURIComponent(dwQuery)} target="_blank" rel="noreferrer">
+                    Try on Ahmia.fi directly →
+                  </a>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div>
+              <div className="muted" style={{ marginTop: "6px", marginBottom: "4px" }}>
+                {results.length} result(s) via Ahmia · dark web content — exercise caution
+              </div>
+              <div className="dw-results-list">
+                {results.map(function (item, i) {
+                  return (
+                    <div className="dw-result-card" key={i}>
+                      <span className="dw-result-title">{item.title || "(No title)"}</span>
+                      {item.onionUrl && <div className="dw-result-url">{item.onionUrl}</div>}
+                      {item.description && <div className="dw-result-desc">{item.description}</div>}
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{ marginTop: "10px" }}>
+                <a className="dw-item-link" href={"https://ahmia.fi/search/?q=" + encodeURIComponent(dwQuery)} target="_blank" rel="noreferrer">
+                  See full results on Ahmia.fi →
+                </a>
+              </div>
+            </div>
+          );
+        }
+
+        function renderDarkWebLayout() {
+          const placeholder = dwSearchType === "breach"
+            ? "user@example.com"
+            : "ransomware, credentials, company name…";
+          const label = dwSearchType === "breach" ? "Email Address" : "Search Keyword";
+          const btnLabel = dwSearchType === "breach" ? "Check Breaches" : "Search Dark Web";
+          const hasResults = dwBreachResult || dwSearchResults;
+
+          return (
+            <div className="layout-row">
+              <section className="search-panel">
+                <div className="dw-warning">
+                  <strong>For authorized security research only.</strong> Dark web monitoring data
+                  is provided for defensive threat intelligence and breach awareness. Do not use
+                  this tool to access illegal content or services.
+                </div>
+                <div className="dw-type-row">
+                  <button
+                    type="button"
+                    className={"dw-type-btn " + (dwSearchType === "breach" ? "active" : "")}
+                    onClick={function () { setDwSearchType("breach"); setDwError(""); }}
+                  >
+                    Breach Check
+                  </button>
+                  <button
+                    type="button"
+                    className={"dw-type-btn " + (dwSearchType === "search" ? "active" : "")}
+                    onClick={function () { setDwSearchType("search"); setDwError(""); }}
+                  >
+                    Tor Search
+                  </button>
+                </div>
+                <form onSubmit={handleDwSubmit}>
+                  <label htmlFor="dw-input">{label}</label>
+                  <input
+                    id="dw-input"
+                    placeholder={placeholder}
+                    value={dwQuery}
+                    onChange={function (e) { setDwQuery(e.target.value); }}
+                    autoComplete="off"
+                  />
+                  <button type="submit" disabled={dwLoading}>
+                    {dwLoading ? "Scanning…" : btnLabel}
+                  </button>
+                  {dwError && <div className="hint" style={{ color: "#fecaca" }}>{dwError}</div>}
+                </form>
+                {dwSearchType === "breach" && (
+                  <div className="hint" style={{ marginTop: "10px" }}>
+                    Checks email against <strong>HaveIBeenPwned</strong>. Set{" "}
+                    <code style={{ color: "#c4b5fd" }}>HIBP_API_KEY</code> in your environment for live lookups.
+                  </div>
+                )}
+                {dwSearchType === "search" && (
+                  <div className="hint" style={{ marginTop: "10px" }}>
+                    Searches the Tor network via <strong>Ahmia.fi</strong> (clearnet index). Results link to .onion addresses — requires Tor Browser to visit.
+                  </div>
+                )}
+              </section>
+
+              <section className="result-panel">
+                <div className="result-header">
+                  <div className="result-title">Dark Web Monitor</div>
+                  <div className="score-badges">
+                    <div className="badge">
+                      <span className="badge-label">Engine</span>
+                      <span className="badge-value">{dwSearchType === "breach" ? "HIBP" : "Ahmia"}</span>
+                    </div>
+                  </div>
+                </div>
+                {!hasResults && !dwLoading && (
+                  <div className="muted">
+                    Use <strong>Breach Check</strong> to look up email exposure in known data leaks, or <strong>Tor Search</strong> to query the dark web index via Ahmia.
+                  </div>
+                )}
+                {dwSearchType === "breach" ? renderBreachResults() : renderDwSearchResults()}
+                {renderDwResourceHub()}
+              </section>
+            </div>
+          );
+        }
+
         function renderAssetLayout() {
           return (
             <div className="layout-row">
@@ -1927,8 +2532,17 @@
                 >
                   Vulnerabilities
                 </button>
+                <button
+                  className={"mode-tab " + (mode === "darkweb" ? "active" : "")}
+                  type="button"
+                  onClick={() => setMode("darkweb")}
+                >
+                  Dark Web Monitor
+                </button>
               </div>
-              {mode === "asset" ? renderAssetLayout() : renderVulnLayout()}
+              {mode === "asset" && renderAssetLayout()}
+              {mode === "vuln" && renderVulnLayout()}
+              {mode === "darkweb" && renderDarkWebLayout()}
             </main>
             <footer></footer>
           </div>
